@@ -1,10 +1,12 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Link from "next/link"
 import { fetchUserRepositories, type GitHubRepo } from "@/lib/github"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Loader2, ExternalLink, Star, GitFork } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Loader2, ExternalLink, Star, History } from "lucide-react"
 
 export function RepositoryList() {
   const [repos, setRepos] = useState<GitHubRepo[]>([])
@@ -50,18 +52,13 @@ export function RepositoryList() {
   return (
     <div className="space-y-3">
       <p className="text-sm text-muted-foreground">
-        {repos.length} public {repos.length === 1 ? "repository" : "repositories"}
+        {repos.length} public {repos.length === 1 ? "repository" : "repositories"} - Select one to search its history
       </p>
       <div className="grid gap-3">
-        {repos.map((repo) => (
-          <a
-            key={repo.id}
-            href={repo.html_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block"
-          >
-            <Card className="transition-colors hover:bg-muted/50">
+        {repos.map((repo) => {
+          const [owner] = repo.full_name.split("/")
+          return (
+            <Card key={repo.id} className="transition-colors hover:bg-muted/50">
               <CardHeader className="pb-2">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2">
@@ -72,7 +69,15 @@ export function RepositoryList() {
                       Public
                     </Badge>
                   </div>
-                  <ExternalLink className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                  <a
+                    href={repo.html_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-foreground"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                  </a>
                 </div>
                 {repo.description && (
                   <CardDescription className="line-clamp-2 text-sm">
@@ -81,22 +86,30 @@ export function RepositoryList() {
                 )}
               </CardHeader>
               <CardContent className="pt-0">
-                <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                  {repo.language && (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                    {repo.language && (
+                      <span className="flex items-center gap-1">
+                        <span className="h-2.5 w-2.5 rounded-full bg-primary" />
+                        {repo.language}
+                      </span>
+                    )}
                     <span className="flex items-center gap-1">
-                      <span className="h-2.5 w-2.5 rounded-full bg-primary" />
-                      {repo.language}
+                      <Star className="h-3 w-3" />
+                      {repo.stargazers_count}
                     </span>
-                  )}
-                  <span className="flex items-center gap-1">
-                    <Star className="h-3 w-3" />
-                    {repo.stargazers_count}
-                  </span>
+                  </div>
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href={`/repo/${owner}/${repo.name}`} className="gap-2">
+                      <History className="h-3 w-3" />
+                      Search History
+                    </Link>
+                  </Button>
                 </div>
               </CardContent>
             </Card>
-          </a>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

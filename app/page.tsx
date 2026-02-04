@@ -1,5 +1,5 @@
 import { AuthButtons } from "@/components/auth-buttons"
-import { Github } from "lucide-react"
+import { History } from "lucide-react"
 
 export default function Home() {
   return (
@@ -7,13 +7,14 @@ export default function Home() {
       <div className="mx-auto w-full max-w-2xl space-y-8">
         <div className="space-y-4 text-center">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
-            <Github className="h-8 w-8" />
+            <History className="h-8 w-8" />
           </div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground">
-            GitHub Repository Explorer
+            Git History Search
           </h1>
           <p className="text-muted-foreground">
-            Sign in with your GitHub account to view your repositories
+            Search for files and directories across your repository's entire Git history,
+            including deleted and renamed paths
           </p>
         </div>
 
@@ -22,7 +23,7 @@ export default function Home() {
         </div>
 
         <p className="text-center text-xs text-muted-foreground">
-          This app uses NextAuth.js for authentication
+          Sign in with GitHub to select a repository and start searching
         </p>
       </div>
     </main>
